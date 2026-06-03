@@ -3,11 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Your Name — Portfolio 2026</title>
+    <title>Access Enterprises — AI & Automation Hub</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Instrument+Serif:ital@0;1&family=Syne:wght@400;500;600;700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Instrument+Serif:ital@0;1&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;500;600;700&family=Syne:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
     <style>
@@ -44,7 +44,7 @@
         --bg-card: #ffffff;
         --bg-glass: rgba(0, 153, 180, 0.03);
         --border: rgba(0, 153, 180, 0.12);
-        --border-glow: rgba(0, 153, 180, 0.30);
+        --border-glow: rgba(0, 153, 180, 0.3);
         --gold: #0099b4;
         --gold-dim: #006f88;
         --gold-glow: rgba(0, 153, 180, 0.09);
@@ -207,7 +207,7 @@
       #cursor-ring {
         width: 32px;
         height: 32px;
-        border: 1.5px solid rgba(0, 229, 255, 0.30);
+        border: 1.5px solid rgba(0, 229, 255, 0.3);
         border-radius: 50%;
         position: fixed;
         top: 0;
@@ -255,21 +255,47 @@
       }
 
       /* ===== SIDEBAR ===== */
+      /* ── SIDEBAR: always overlay/hidden by default on ALL sizes ── */
       .sidebar {
         width: var(--sidebar-w);
-        min-height: 100vh;
-        position: sticky;
-        top: 0;
         height: 100vh;
+        position: fixed;
+        left: 0;
+        top: 0;
+        z-index: 999;
         overflow-y: auto;
         background: var(--bg-card);
         border-right: 1px solid var(--border);
+        box-shadow: 2px 0 24px rgba(0, 0, 0, 0.4);
         padding: 36px 24px;
         display: flex;
         flex-direction: column;
         gap: 0;
         flex-shrink: 0;
-        transition: var(--transition);
+        transform: translateX(-100%);
+        transition: transform var(--transition);
+      }
+      .sidebar.mobile-open {
+        transform: translateX(0);
+      }
+      /* Backdrop on ALL sizes */
+      main::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        opacity: 0;
+        visibility: hidden;
+        transition:
+          opacity var(--transition),
+          visibility var(--transition);
+        z-index: 998;
+        pointer-events: none;
+      }
+      main.sidebar-backdrop::before {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
       }
 
       .sidebar::-webkit-scrollbar {
@@ -465,10 +491,11 @@
         background: var(--gold-glow);
       }
 
-      /* ===== MAIN CONTENT ===== */
+      /* ===== MAIN CONTENT — always full width, sidebar is overlay ===== */
       .main-content {
         flex: 1;
         min-width: 0;
+        width: 100%;
         display: flex;
         flex-direction: column;
       }
@@ -489,36 +516,181 @@
         gap: 16px;
       }
 
-      /* Sidebar Toggle Arrow Button */
+      /* ── SIDEBAR TOGGLE ARROW — visible on ALL screen sizes ── */
       .sidebar-toggle-arrow {
         background: none;
-        border: 1px solid var(--border);
-        color: var(--text-primary);
+        border: 1.5px solid rgba(0, 229, 255, 0.3);
+        color: #00e5ff;
         width: 36px;
         height: 36px;
         border-radius: 8px;
-        display: none;
+        display: flex;
         align-items: center;
         justify-content: center;
         cursor: pointer;
         transition: all var(--transition);
         flex-shrink: 0;
       }
-
       .sidebar-toggle-arrow:hover {
         border-color: var(--gold);
-        color: var(--gold);
-        background: rgba(0, 229, 255, 0.04);
+        background: rgba(0, 229, 255, 0.08);
+        box-shadow: 0 0 10px rgba(0, 229, 255, 0.2);
       }
-
       .arrow-icon {
         font-size: 14px;
         display: inline-flex;
         transition: transform var(--transition);
       }
-
       .sidebar-toggle-arrow.active .arrow-icon {
         transform: rotateY(180deg);
+      }
+
+      /* ── HAMBURGER BUTTON (mobile only) ── */
+      .hamburger-btn {
+        display: none;
+        background: none;
+        border: 1.5px solid rgba(0, 229, 255, 0.3);
+        color: #00e5ff;
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        flex-shrink: 0;
+        flex-direction: column;
+        gap: 5px;
+        padding: 8px;
+        transition: all var(--transition);
+      }
+      .hamburger-btn:hover {
+        border-color: var(--gold);
+        background: rgba(0, 229, 255, 0.08);
+      }
+      .hamburger-btn .hb-line {
+        display: block;
+        width: 18px;
+        height: 2px;
+        background: #00e5ff;
+        border-radius: 2px;
+        transition: all 0.3s ease;
+        transform-origin: center;
+      }
+      .hamburger-btn.open .hb-line:nth-child(1) {
+        transform: translateY(7px) rotate(45deg);
+      }
+      .hamburger-btn.open .hb-line:nth-child(2) {
+        opacity: 0;
+        transform: scaleX(0);
+      }
+      .hamburger-btn.open .hb-line:nth-child(3) {
+        transform: translateY(-7px) rotate(-45deg);
+      }
+
+      /* ── MOBILE NAV DROPDOWN ── */
+      .mobile-nav-dropdown {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 997;
+        background: rgba(4, 6, 14, 0.97);
+        backdrop-filter: blur(12px);
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        opacity: 0;
+        transform: translateY(-20px);
+        transition:
+          opacity 0.3s ease,
+          transform 0.3s ease;
+        pointer-events: none;
+      }
+      .mobile-nav-dropdown.open {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+      }
+      .mobile-nav-dropdown .mob-nav-btn {
+        font-family: "Orbitron", sans-serif;
+        font-size: 1.1rem;
+        font-weight: 700;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        color: #7a9ab0;
+        background: none;
+        border: none;
+        padding: 16px 32px;
+        cursor: pointer;
+        transition:
+          color 0.2s,
+          transform 0.2s;
+        position: relative;
+      }
+      .mobile-nav-dropdown .mob-nav-btn::after {
+        content: "";
+        position: absolute;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 0;
+        height: 1px;
+        background: linear-gradient(90deg, #00e5ff, #ff00ff);
+        transition: width 0.3s ease;
+      }
+      .mobile-nav-dropdown .mob-nav-btn:hover,
+      .mobile-nav-dropdown .mob-nav-btn.active {
+        color: #00e5ff;
+        transform: scale(1.06);
+      }
+      .mobile-nav-dropdown .mob-nav-btn:hover::after,
+      .mobile-nav-dropdown .mob-nav-btn.active::after {
+        width: 50%;
+      }
+      .mobile-nav-dropdown .mob-nav-close {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        font-size: 1.6rem;
+        color: #7a9ab0;
+        background: none;
+        border: none;
+        cursor: pointer;
+        line-height: 1;
+        padding: 8px;
+        transition: color 0.2s;
+      }
+      .mobile-nav-dropdown .mob-nav-close:hover {
+        color: #ff00ff;
+      }
+      /* staggered animation for mobile nav items */
+      .mobile-nav-dropdown.open .mob-nav-btn:nth-child(2) {
+        animation: navItemIn 0.3s 0.05s ease both;
+      }
+      .mobile-nav-dropdown.open .mob-nav-btn:nth-child(3) {
+        animation: navItemIn 0.3s 0.1s ease both;
+      }
+      .mobile-nav-dropdown.open .mob-nav-btn:nth-child(4) {
+        animation: navItemIn 0.3s 0.15s ease both;
+      }
+      .mobile-nav-dropdown.open .mob-nav-btn:nth-child(5) {
+        animation: navItemIn 0.3s 0.2s ease both;
+      }
+      .mobile-nav-dropdown.open .mob-nav-btn:nth-child(6) {
+        animation: navItemIn 0.3s 0.25s ease both;
+      }
+      @keyframes navItemIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
       }
 
       .navbar-list {
@@ -622,8 +794,13 @@
       }
 
       @keyframes jackPulse {
-        0%, 100% { box-shadow: 0 0 16px rgba(37, 211, 102, 0.30); }
-        50%       { box-shadow: 0 0 28px rgba(37, 211, 102, 0.55); }
+        0%,
+        100% {
+          box-shadow: 0 0 16px rgba(37, 211, 102, 0.3);
+        }
+        50% {
+          box-shadow: 0 0 28px rgba(37, 211, 102, 0.55);
+        }
       }
 
       /* ── ASK JACK CHAT PANEL ── */
@@ -639,7 +816,9 @@
         display: flex;
         flex-direction: column;
         z-index: 500;
-        box-shadow: 0 24px 64px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(37,211,102,0.08);
+        box-shadow:
+          0 24px 64px rgba(0, 0, 0, 0.55),
+          0 0 0 1px rgba(37, 211, 102, 0.08);
         transform: scale(0.88) translateY(24px);
         opacity: 0;
         pointer-events: none;
@@ -673,11 +852,11 @@
         width: 40px;
         height: 40px;
         border-radius: 50%;
-        background: rgba(255,255,255,0.2);
+        background: rgba(255, 255, 255, 0.2);
         display: grid;
         place-items: center;
         font-size: 20px;
-        border: 2px solid rgba(255,255,255,0.4);
+        border: 2px solid rgba(255, 255, 255, 0.4);
       }
 
       .jack-name {
@@ -690,7 +869,7 @@
       .jack-status {
         font-family: "DM Mono", monospace;
         font-size: 10px;
-        color: rgba(255,255,255,0.8);
+        color: rgba(255, 255, 255, 0.8);
         display: flex;
         align-items: center;
         gap: 5px;
@@ -705,7 +884,7 @@
       }
 
       .jack-close {
-        background: rgba(255,255,255,0.15);
+        background: rgba(255, 255, 255, 0.15);
         border: none;
         color: #fff;
         width: 30px;
@@ -717,7 +896,9 @@
         transition: background 0.2s;
       }
 
-      .jack-close:hover { background: rgba(255,255,255,0.3); }
+      .jack-close:hover {
+        background: rgba(255, 255, 255, 0.3);
+      }
 
       .jack-body {
         flex: 1;
@@ -729,8 +910,13 @@
         background: var(--bg-deep);
       }
 
-      .jack-body::-webkit-scrollbar { width: 3px; }
-      .jack-body::-webkit-scrollbar-thumb { background: rgba(37,211,102,0.3); border-radius: 2px; }
+      .jack-body::-webkit-scrollbar {
+        width: 3px;
+      }
+      .jack-body::-webkit-scrollbar-thumb {
+        background: rgba(37, 211, 102, 0.3);
+        border-radius: 2px;
+      }
 
       .jack-bubble {
         max-width: 86%;
@@ -758,8 +944,8 @@
       }
 
       .jack-bubble.system {
-        background: rgba(37,211,102,0.08);
-        border: 1px dashed rgba(37,211,102,0.3);
+        background: rgba(37, 211, 102, 0.08);
+        border: 1px dashed rgba(37, 211, 102, 0.3);
         color: var(--text-secondary);
         font-size: 11.5px;
         align-self: center;
@@ -774,7 +960,7 @@
         align-items: center;
         padding: 10px 14px;
         background: var(--bg-card);
-        border: 1px solid rgba(37,211,102,0.15);
+        border: 1px solid rgba(37, 211, 102, 0.15);
         border-radius: 16px;
         border-bottom-left-radius: 4px;
         align-self: flex-start;
@@ -789,12 +975,24 @@
         animation: typingDot 1.2s ease infinite;
       }
 
-      .jack-typing span:nth-child(2) { animation-delay: 0.2s; }
-      .jack-typing span:nth-child(3) { animation-delay: 0.4s; }
+      .jack-typing span:nth-child(2) {
+        animation-delay: 0.2s;
+      }
+      .jack-typing span:nth-child(3) {
+        animation-delay: 0.4s;
+      }
 
       @keyframes typingDot {
-        0%, 80%, 100% { transform: scale(0.7); opacity: 0.4; }
-        40% { transform: scale(1); opacity: 1; }
+        0%,
+        80%,
+        100% {
+          transform: scale(0.7);
+          opacity: 0.4;
+        }
+        40% {
+          transform: scale(1);
+          opacity: 1;
+        }
       }
 
       .jack-quick-btns {
@@ -808,7 +1006,7 @@
 
       .jack-quick-btn {
         background: var(--bg-glass);
-        border: 1px solid rgba(37,211,102,0.22);
+        border: 1px solid rgba(37, 211, 102, 0.22);
         color: var(--text-secondary);
         font-family: "DM Mono", monospace;
         font-size: 10px;
@@ -821,7 +1019,7 @@
       .jack-quick-btn:hover {
         border-color: #25d366;
         color: #25d366;
-        background: rgba(37,211,102,0.07);
+        background: rgba(37, 211, 102, 0.07);
       }
 
       .jack-input-row {
@@ -847,11 +1045,13 @@
       }
 
       .jack-input:focus {
-        border-color: rgba(37,211,102,0.5);
-        box-shadow: 0 0 0 2px rgba(37,211,102,0.08);
+        border-color: rgba(37, 211, 102, 0.5);
+        box-shadow: 0 0 0 2px rgba(37, 211, 102, 0.08);
       }
 
-      .jack-input::placeholder { color: var(--text-muted); }
+      .jack-input::placeholder {
+        color: var(--text-muted);
+      }
 
       .jack-send {
         background: linear-gradient(135deg, #25d366, #128c7e);
@@ -867,13 +1067,30 @@
         flex-shrink: 0;
       }
 
-      .jack-send:hover { transform: scale(1.1); box-shadow: 0 4px 12px rgba(37,211,102,0.35); }
+      .jack-send:hover {
+        transform: scale(1.1);
+        box-shadow: 0 4px 12px rgba(37, 211, 102, 0.35);
+      }
 
-      html.day-mode .jack-body { background: #ece5dd; }
-      html.day-mode .jack-bubble.bot { background: #fff; color: #111; border-color: rgba(37,211,102,0.2); }
-      html.day-mode .jack-input-row { background: #f0f0f0; }
-      html.day-mode .jack-input { background: #fff; color: #111; border-color: rgba(0,0,0,0.15); }
-      html.day-mode .jack-quick-btns { background: #ece5dd; }
+      html.day-mode .jack-body {
+        background: #ece5dd;
+      }
+      html.day-mode .jack-bubble.bot {
+        background: #fff;
+        color: #111;
+        border-color: rgba(37, 211, 102, 0.2);
+      }
+      html.day-mode .jack-input-row {
+        background: #f0f0f0;
+      }
+      html.day-mode .jack-input {
+        background: #fff;
+        color: #111;
+        border-color: rgba(0, 0, 0, 0.15);
+      }
+      html.day-mode .jack-quick-btns {
+        background: #ece5dd;
+      }
 
       /* ── BLOG EXPAND MODAL ── */
       .blog-expand-overlay {
@@ -1067,7 +1284,6 @@
       .blog-content {
         padding-bottom: 44px;
       }
-
 
       /* Contact form section label */
       .contact-form-label {
@@ -1683,7 +1899,7 @@
 
       .project-card:hover {
         border-color: var(--gold-dim);
-        box-shadow: 0 12px 40px rgba(0, 229, 255, 0.10);
+        box-shadow: 0 12px 40px rgba(0, 229, 255, 0.1);
         transform: translateY(-6px);
       }
 
@@ -2764,7 +2980,7 @@
           rgba(0, 229, 255, 0.08),
           rgba(0, 229, 255, 0.03)
         );
-        border: 1.5px solid rgba(0, 229, 255, 0.20);
+        border: 1.5px solid rgba(0, 229, 255, 0.2);
         color: var(--text-primary);
         padding: 16px 12px;
         border-radius: 12px;
@@ -2803,7 +3019,7 @@
           rgba(0, 229, 255, 0.06)
         );
         transform: translateY(-4px);
-        box-shadow: 0 8px 24px rgba(0, 229, 255, 0.10);
+        box-shadow: 0 8px 24px rgba(0, 229, 255, 0.1);
       }
 
       .eaccess-btn:hover::before {
@@ -3365,8 +3581,8 @@
         }
       }
 
-      /* ===== MOBILE ===== */
-      @media (max-width: 900px) {
+      /* ===== MOBILE (hamburger nav) ===== */
+      @media (max-width: 768px) {
         :root {
           --sidebar-w: 280px;
         }
@@ -3376,146 +3592,30 @@
           position: relative;
         }
 
-        .sidebar {
-          /* Mobile: Fixed overlay sidebar */
-          position: fixed;
-          left: 0;
-          top: 0;
-          width: var(--sidebar-w);
-          height: 100vh;
-          max-height: 100vh;
-          z-index: 999;
-          border-right: 1px solid var(--border);
-          border-bottom: none;
-          overflow-y: auto;
-          transform: translateX(-100%);
-          transition: transform var(--transition);
-          box-shadow: 2px 0 20px rgba(0, 0, 0, 0.3);
+        /* Hide desktop nav list, show hamburger */
+        .navbar-list {
+          display: none !important;
         }
-
-        .sidebar.mobile-open {
-          transform: translateX(0);
-        }
-
-        /* Backdrop/overlay when sidebar is open */
-        main::before {
-          content: "";
-          position: fixed;
-          inset: 0;
-          background: rgba(0, 0, 0, 0.5);
-          opacity: 0;
-          visibility: hidden;
-          transition:
-            opacity var(--transition),
-            visibility var(--transition);
-          z-index: 998;
-          pointer-events: none;
-        }
-
-        main.sidebar-backdrop::before {
-          opacity: 1;
-          visibility: visible;
-          pointer-events: auto;
-        }
-
-        .navbar {
-          position: sticky;
-          top: 0;
-          z-index: 100;
-          width: 100%;
-          border-bottom: 1px solid var(--border);
-        }
-
-        .sidebar-toggle-arrow {
+        .hamburger-btn {
           display: flex !important;
         }
-
-        .sidebar-toggle-btn {
-          display: none !important;
-          visibility: hidden !important;
-          width: auto;
-          margin: 0;
-          padding: 8px 12px;
-          font-size: 12px;
-          min-height: 36px;
-          z-index: 101;
-          position: absolute;
-          left: 12px;
-          top: 50%;
-          transform: translateY(-50%);
-          background: transparent;
-          border: none;
-          color: var(--text-primary);
-          cursor: pointer;
+        .mobile-nav-dropdown {
+          display: flex;
         }
 
-        .sidebar-toggle-btn::before {
-          content: "☰";
-          font-size: 20px;
-          display: inline-block;
-          margin-right: 4px;
-        }
-
-        .sidebar-toggle-btn:disabled {
-          display: block !important;
-        }
-
-        .sidebar-contacts {
-          display: block;
-        }
-
-        .sidebar-contacts.open {
-          display: block;
+        nav.navbar {
+          padding: 10px 16px;
+          gap: 10px;
         }
 
         .contact-layout {
           grid-template-columns: 1fr;
         }
-
         .about-bio {
           grid-template-columns: 1fr;
         }
-
         article.page {
-          padding: 24px 20px;
-        }
-
-        nav.navbar {
-          position: sticky;
-          top: 0;
-          z-index: 100;
-          padding: 12px 16px;
-          width: 100%;
-          border-bottom: 1px solid var(--border);
-          background: rgba(13, 16, 24, 0.95);
-          backdrop-filter: blur(10px);
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          gap: 8px;
-        }
-
-        .navbar-list {
-          display: flex;
-          gap: 0;
-          align-items: center;
-          flex: 1;
-          margin: 0;
-          margin-left: 54px;
-          padding: 0;
-          list-style: none;
-        }
-
-        .nav-btn {
-          font-size: 11px;
-          padding: 8px 12px;
-          white-space: nowrap;
-        }
-
-        .navbar-right {
-          display: flex;
-          gap: 8px;
-          align-items: center;
+          padding: 24px 16px;
         }
 
         .theme-toggle-btn,
@@ -3526,11 +3626,9 @@
         .qr-grid {
           grid-template-columns: repeat(2, 1fr);
         }
-
         .proj-viewer-body {
           grid-template-columns: 1fr;
         }
-
         .jack-panel {
           width: calc(100vw - 32px);
           right: 16px;
@@ -3540,21 +3638,6 @@
       @media (max-width: 600px) {
         :root {
           --sidebar-w: 240px;
-        }
-
-        .sidebar-toggle-btn {
-          left: 8px;
-          padding: 6px 10px;
-          font-size: 10px;
-        }
-
-        .navbar-list {
-          margin-left: 48px;
-        }
-
-        .nav-btn {
-          font-size: 9px;
-          padding: 6px 8px;
         }
 
         .theme-toggle-btn,
@@ -4576,6 +4659,543 @@
           transform: translateY(0);
         }
       }
+
+      /* ═══════════════════════════════════════
+         ACCESS ENTERPRISES LOGO BUTTON
+      ═══════════════════════════════════════ */
+      .ae-logo-btn {
+        display: flex;
+        align-items: center;
+        gap: 0;
+        background: none;
+        border: none;
+        padding: 0;
+        cursor: pointer;
+        flex-shrink: 0;
+        transition:
+          opacity 0.25s,
+          transform 0.25s;
+        text-decoration: none;
+      }
+      .ae-logo-btn:hover {
+        opacity: 0.85;
+        transform: scale(1.03);
+      }
+      .ae-logo-btn img {
+        height: 44px;
+        width: auto;
+        display: block;
+        border-radius: 6px;
+        object-fit: contain;
+      }
+
+      /* ═══════════════════════════════════════
+         NEWS TICKER
+      ═══════════════════════════════════════ */
+      .news-ticker-bar {
+        width: 100%;
+        background: linear-gradient(
+          90deg,
+          #0a0f20 0%,
+          #060c1e 40%,
+          #0a0f20 100%
+        );
+        border-bottom: 1px solid rgba(0, 229, 255, 0.18);
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+        height: 36px;
+        position: relative;
+        flex-shrink: 0;
+      }
+      .news-ticker-bar::before {
+        content: "⚡ LIVE";
+        font-family: "Orbitron", sans-serif;
+        font-size: 0.62rem;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        color: #000;
+        background: linear-gradient(90deg, #00e5ff, #ff00ff);
+        padding: 4px 12px;
+        white-space: nowrap;
+        flex-shrink: 0;
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        display: flex;
+        align-items: center;
+        z-index: 2;
+      }
+      .news-ticker-label {
+        font-family: "Orbitron", sans-serif;
+        font-size: 0.62rem;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        color: #000;
+        background: linear-gradient(90deg, #00e5ff, #ff00ff);
+        padding: 0 12px;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        white-space: nowrap;
+        flex-shrink: 0;
+        z-index: 2;
+      }
+      .news-ticker-track-wrap {
+        flex: 1;
+        overflow: hidden;
+        padding-left: 16px;
+      }
+      .news-ticker-track {
+        display: inline-flex;
+        gap: 0;
+        animation: tickerScroll 40s linear infinite;
+        white-space: nowrap;
+      }
+      .news-ticker-track span {
+        font-family: "Rajdhani", sans-serif;
+        font-size: 0.82rem;
+        font-weight: 500;
+        letter-spacing: 0.8px;
+        color: #c8dde8;
+        padding-right: 60px;
+      }
+      .news-ticker-track .sep-star {
+        color: #00e5ff;
+        padding-right: 60px;
+        font-size: 0.7rem;
+      }
+      @keyframes tickerScroll {
+        0% {
+          transform: translateX(0);
+        }
+        100% {
+          transform: translateX(-50%);
+        }
+      }
+      .news-ticker-bar:hover .news-ticker-track {
+        animation-play-state: paused;
+      }
+
+      /* ═══════════════════════════════════════
+         HOME PAGE HERO SECTION
+      ═══════════════════════════════════════ */
+      .home-hero {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 40px 24px 20px;
+        position: relative;
+        overflow: hidden;
+      }
+      .home-hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(
+            ellipse 60% 40% at 50% 0%,
+            rgba(0, 229, 255, 0.07) 0%,
+            transparent 70%
+          ),
+          radial-gradient(
+            ellipse 40% 30% at 80% 50%,
+            rgba(255, 0, 255, 0.05) 0%,
+            transparent 60%
+          );
+        pointer-events: none;
+      }
+      .home-hero-badge {
+        font-family: "Orbitron", sans-serif;
+        font-size: 0.6rem;
+        font-weight: 700;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        color: #00e5ff;
+        background: rgba(0, 229, 255, 0.06);
+        border: 1px solid rgba(0, 229, 255, 0.25);
+        border-radius: 20px;
+        padding: 5px 16px;
+        margin-bottom: 16px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        animation: fadeInUp 0.6s ease both;
+      }
+      .home-hero-badge::before {
+        content: "";
+        width: 6px;
+        height: 6px;
+        background: #00e5ff;
+        border-radius: 50%;
+        animation: blink 1.4s ease infinite;
+        display: inline-block;
+      }
+      @keyframes blink {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.2;
+        }
+      }
+      .home-hero-title {
+        font-family: "Orbitron", sans-serif;
+        font-size: clamp(1.6rem, 4.5vw, 3.2rem);
+        font-weight: 900;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        line-height: 1.15;
+        margin-bottom: 14px;
+        background: linear-gradient(
+          135deg,
+          #00e5ff 0%,
+          #ffffff 40%,
+          #ff00ff 80%,
+          #d4a017 100%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        animation: fadeInUp 0.7s 0.1s ease both;
+      }
+      .home-hero-sub {
+        font-family: "Rajdhani", sans-serif;
+        font-size: clamp(0.85rem, 2vw, 1.1rem);
+        font-weight: 500;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: #7a9ab0;
+        margin-bottom: 24px;
+        animation: fadeInUp 0.7s 0.2s ease both;
+      }
+
+      /* ═══════════════════════════════════════
+         HOME CAROUSEL (full-width, animated frame)
+      ═══════════════════════════════════════ */
+      .home-carousel-section {
+        padding: 0 0 40px;
+        animation: fadeInUp 0.7s 0.3s ease both;
+      }
+      .home-carousel-wrapper {
+        position: relative;
+        width: 100%;
+        border-radius: 12px;
+        overflow: hidden;
+        aspect-ratio: 16/6;
+        max-height: 480px;
+        background: #0a1428;
+        box-shadow:
+          0 0 0 2px rgba(0, 229, 255, 0.25),
+          0 0 30px rgba(0, 229, 255, 0.15),
+          0 0 60px rgba(255, 0, 255, 0.08);
+      }
+      .home-carousel-inner {
+        position: absolute;
+        inset: 0;
+        border-radius: 12px;
+        overflow: hidden;
+        z-index: 2;
+      }
+      .home-carousel-inner .carousel-track {
+        inset: 0;
+        border-radius: 12px;
+      }
+      .home-carousel-section .carousel-slide img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      .home-carousel-section .carousel-arrow {
+        z-index: 10;
+      }
+      .home-carousel-section .slide-counter {
+        z-index: 10;
+      }
+      .home-carousel-section .carousel-progress {
+        z-index: 10;
+      }
+
+      /* ═══════════════════════════════════════
+         HOME STATS BAR (futuristic)
+      ═══════════════════════════════════════ */
+      .home-stats-bar {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 0;
+        border: 1px solid rgba(0, 229, 255, 0.15);
+        border-radius: 0;
+        overflow: hidden;
+        margin: 0 0 48px;
+        background: linear-gradient(180deg, #060c1e 0%, #030610 100%);
+        position: relative;
+        animation: fadeInUp 0.7s 0.4s ease both;
+      }
+      .home-stats-bar::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          #00e5ff,
+          #ff00ff,
+          #d4a017,
+          #39ffb0,
+          #0066ff
+        );
+        animation: shimmerLine 3s linear infinite;
+        background-size: 200% 100%;
+      }
+      @keyframes shimmerLine {
+        0% {
+          background-position: 0% 0%;
+        }
+        100% {
+          background-position: 200% 0%;
+        }
+      }
+      .home-stat-item {
+        padding: 24px 16px;
+        text-align: center;
+        border-right: 1px solid rgba(0, 229, 255, 0.1);
+        position: relative;
+        transition: background 0.3s;
+      }
+      .home-stat-item:last-child {
+        border-right: none;
+      }
+      .home-stat-item:hover {
+        background: rgba(0, 229, 255, 0.04);
+      }
+      .home-stat-num {
+        font-family: "Orbitron", sans-serif;
+        font-size: clamp(1.3rem, 3vw, 2rem);
+        font-weight: 900;
+        letter-spacing: 1px;
+        background: linear-gradient(135deg, #00e5ff, #ff00ff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        display: block;
+        line-height: 1;
+        margin-bottom: 8px;
+      }
+      .home-stat-item:nth-child(2) .home-stat-num {
+        background: linear-gradient(135deg, #ff00ff, #d4a017);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .home-stat-item:nth-child(3) .home-stat-num {
+        background: linear-gradient(135deg, #d4a017, #39ffb0);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .home-stat-item:nth-child(4) .home-stat-num {
+        background: linear-gradient(135deg, #39ffb0, #0066ff);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .home-stat-item:nth-child(5) .home-stat-num {
+        background: linear-gradient(135deg, #0066ff, #00e5ff);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .home-stat-label {
+        font-family: "Rajdhani", sans-serif;
+        font-size: 0.72rem;
+        font-weight: 500;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        color: #5a7a8a;
+        line-height: 1.3;
+      }
+
+      /* ═══════════════════════════════════════
+         HOME SERVICES SECTION LABEL
+      ═══════════════════════════════════════ */
+      .home-section-label {
+        font-family: "Orbitron", sans-serif;
+        font-size: 0.65rem;
+        font-weight: 700;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        color: #00e5ff;
+        border-left: 3px solid;
+        border-image: linear-gradient(180deg, #00e5ff, #ff00ff) 1;
+        padding-left: 14px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .home-section-label::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: linear-gradient(90deg, rgba(0, 229, 255, 0.3), transparent);
+      }
+
+      /* ═══════════════════════════════════════
+         TEAM MEMBERS SECTION
+      ═══════════════════════════════════════ */
+      .team-section {
+        margin-top: 56px;
+        animation: fadeInUp 0.7s 0.5s ease both;
+      }
+      .team-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 16px;
+        margin-bottom: 48px;
+      }
+      .team-card {
+        background: linear-gradient(145deg, #060c1e, #0a1428);
+        border: 1px solid rgba(0, 229, 255, 0.1);
+        border-radius: 16px;
+        padding: 20px 16px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+        transition:
+          border-color 0.3s,
+          transform 0.3s,
+          box-shadow 0.3s;
+        animation: fadeInUp 0.6s ease both;
+      }
+      .team-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: var(--team-color, linear-gradient(90deg, #00e5ff, #ff00ff));
+        opacity: 0.8;
+      }
+      .team-card:hover {
+        border-color: rgba(0, 229, 255, 0.35);
+        transform: translateY(-4px);
+        box-shadow:
+          0 12px 32px rgba(0, 0, 0, 0.4),
+          0 0 20px rgba(0, 229, 255, 0.06);
+      }
+      .team-avatar {
+        width: 72px;
+        height: 72px;
+        border-radius: 50%;
+        margin: 0 auto 12px;
+        border: 2px solid rgba(0, 229, 255, 0.3);
+        overflow: hidden;
+        position: relative;
+        box-shadow: 0 0 16px rgba(0, 229, 255, 0.15);
+      }
+      .team-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .team-name {
+        font-family: "Orbitron", sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 1px;
+        color: #e0ecf5;
+        margin-bottom: 4px;
+        text-transform: uppercase;
+      }
+      .team-role {
+        font-family: "Rajdhani", sans-serif;
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: #00e5ff;
+        margin-bottom: 10px;
+      }
+      .team-bio {
+        font-family: "Syne", sans-serif;
+        font-size: 0.75rem;
+        color: #5a7a8a;
+        line-height: 1.55;
+      }
+      /* Color accent per card */
+      .team-card:nth-child(1) {
+        --team-color: linear-gradient(90deg, #00e5ff, #0066ff);
+      }
+      .team-card:nth-child(1) .team-role {
+        color: #00e5ff;
+      }
+      .team-card:nth-child(2) {
+        --team-color: linear-gradient(90deg, #ff00ff, #d4a017);
+      }
+      .team-card:nth-child(2) .team-role {
+        color: #ff00ff;
+      }
+      .team-card:nth-child(3) {
+        --team-color: linear-gradient(90deg, #d4a017, #39ffb0);
+      }
+      .team-card:nth-child(3) .team-role {
+        color: #d4a017;
+      }
+      .team-card:nth-child(4) {
+        --team-color: linear-gradient(90deg, #39ffb0, #00e5ff);
+      }
+      .team-card:nth-child(4) .team-role {
+        color: #39ffb0;
+      }
+      .team-card:nth-child(5) {
+        --team-color: linear-gradient(90deg, #0066ff, #ff00ff);
+      }
+      .team-card:nth-child(5) .team-role {
+        color: #0066ff;
+      }
+      .team-card:nth-child(6) {
+        --team-color: linear-gradient(90deg, #ff00ff, #00e5ff);
+      }
+      .team-card:nth-child(6) .team-role {
+        color: #ff00ff;
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .home-stats-bar {
+          grid-template-columns: repeat(3, 1fr);
+        }
+        .home-stats-bar .home-stat-item:nth-child(4),
+        .home-stats-bar .home-stat-item:nth-child(5) {
+          border-top: 1px solid rgba(0, 229, 255, 0.1);
+        }
+        .news-ticker-label {
+          font-size: 0.55rem;
+          padding: 0 8px;
+        }
+        .home-hero-title {
+          font-size: clamp(1.2rem, 6vw, 2rem);
+        }
+        .team-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media (max-width: 480px) {
+        .home-stats-bar {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .team-grid {
+          grid-template-columns: 1fr;
+        }
+      }
     </style>
   </head>
 
@@ -4722,24 +5342,38 @@
             </div>
           </div>
         </div>
-        <button class="jack-close" id="jack-close-btn" aria-label="Close">✕</button>
+        <button class="jack-close" id="jack-close-btn" aria-label="Close">
+          ✕
+        </button>
       </div>
 
       <!-- Chat body -->
       <div class="jack-body" id="jack-body">
         <div class="jack-bubble bot">
-          👋 Hi! I'm Jack's personal assistant. I can answer questions about his services, experience, and pricing — or help you book an appointment!<br><br>
+          👋 Hi! I'm Jack's personal assistant. I can answer questions about his
+          services, experience, and pricing — or help you book an
+          appointment!<br /><br />
           Just type your question or pick a quick option below.
         </div>
       </div>
 
       <!-- Quick-reply buttons -->
       <div class="jack-quick-btns" id="jack-quick-btns">
-        <button class="jack-quick-btn" data-q="What services do you offer?">🛠 Services</button>
-        <button class="jack-quick-btn" data-q="What is your pricing?">💰 Pricing</button>
-        <button class="jack-quick-btn" data-q="I want to book an appointment">📅 Book Appointment</button>
-        <button class="jack-quick-btn" data-q="How can I contact you?">📞 Contact</button>
-        <button class="jack-quick-btn" data-q="Tell me about your experience">🎯 Experience</button>
+        <button class="jack-quick-btn" data-q="What services do you offer?">
+          🛠 Services
+        </button>
+        <button class="jack-quick-btn" data-q="What is your pricing?">
+          💰 Pricing
+        </button>
+        <button class="jack-quick-btn" data-q="I want to book an appointment">
+          📅 Book Appointment
+        </button>
+        <button class="jack-quick-btn" data-q="How can I contact you?">
+          📞 Contact
+        </button>
+        <button class="jack-quick-btn" data-q="Tell me about your experience">
+          🎯 Experience
+        </button>
       </div>
 
       <!-- Input row -->
@@ -4752,7 +5386,9 @@
           autocomplete="off"
         />
         <button class="jack-send" id="jack-send-btn" aria-label="Send">
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="#fff"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="#fff">
+            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
+          </svg>
         </button>
       </div>
     </div>
@@ -4804,7 +5440,6 @@
         </div>
       </div>
     </div>
-
 
     <main>
       <!-- ═══════════════════════════════════════
@@ -4937,18 +5572,65 @@
   ════════════════════════════════════════ -->
       <div class="main-content">
         <nav class="navbar">
-          <!-- Sidebar Toggle Arrow -->
+          <!-- Access Enterprises Logo — click to go Home -->
+          <button
+            class="ae-logo-btn"
+            id="ae-logo-home"
+            title="Access Enterprises — Home"
+          >
+            <img
+              src="Asset/ae-logo.png"
+              alt="Access Enterprises"
+              onerror="
+                this.style.display = 'none';
+                this.nextElementSibling.style.display = 'flex';
+              "
+            />
+            <span
+              class="ae-logo-fallback"
+              style="
+                display: none;
+                font-family: &quot;Orbitron&quot;, sans-serif;
+                font-size: 0.7rem;
+                font-weight: 900;
+                letter-spacing: 2px;
+                color: #00e5ff;
+                border: 1.5px solid rgba(0, 229, 255, 0.4);
+                border-radius: 6px;
+                padding: 6px 12px;
+                white-space: nowrap;
+                background: linear-gradient(
+                  135deg,
+                  rgba(0, 229, 255, 0.05),
+                  rgba(255, 0, 255, 0.05)
+                );
+              "
+              >ACCESS<br /><span
+                style="color: #ff00ff; font-size: 0.55rem; letter-spacing: 3px"
+                >ENTERPRISES</span
+              ></span
+            >
+          </button>
+
+          <!-- Sidebar Info Toggle (visible on ALL sizes) -->
           <button
             class="sidebar-toggle-arrow"
             id="sidebar-toggle-arrow"
-            title="Toggle Sidebar"
+            title="My Profile Info"
           >
             <span class="arrow-icon">◀</span>
           </button>
 
+          <!-- Hamburger (mobile only) -->
+          <button class="hamburger-btn" id="hamburger-btn" title="Menu">
+            <span class="hb-line"></span>
+            <span class="hb-line"></span>
+            <span class="hb-line"></span>
+          </button>
+
           <ul class="navbar-list">
             <li>
-              <button class="nav-btn active" data-page="about">About</button>
+              <button class="nav-btn active" data-page="about">Home</button>
             </li>
             <li><button class="nav-btn" data-page="resume">Resume</button></li>
             <li>
@@ -4976,10 +5658,18 @@
             </button>
 
             <!-- Ask Jack — Personal Assistant -->
-            <button class="ask-jack-btn" id="ask-jack-toggle" title="Chat with Jack's Personal Assistant">
+            <button
+              class="ask-jack-btn"
+              id="ask-jack-toggle"
+              title="Chat with Jack's Personal Assistant"
+            >
               <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
-                <path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.122 1.532 5.855L.054 23.386a.75.75 0 0 0 .918.918l5.593-1.493A11.94 11.94 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.907 0-3.686-.518-5.21-1.42l-.364-.214-3.77 1.007 1.02-3.695-.232-.376A9.96 9.96 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/>
+                <path
+                  d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"
+                />
+                <path
+                  d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.122 1.532 5.855L.054 23.386a.75.75 0 0 0 .918.918l5.593-1.493A11.94 11.94 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.907 0-3.686-.518-5.21-1.42l-.364-.214-3.77 1.007 1.02-3.695-.232-.376A9.96 9.96 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"
+                />
               </svg>
               Ask Jack
               <span class="ask-jack-notif"></span>
@@ -4988,104 +5678,289 @@
         </nav>
 
         <!-- ═══════════════════════════════════════
-         ABOUT PAGE
-    ════════════════════════════════════════ -->
-        <article class="page active" id="page-about">
-          <div class="page-header">
-            <div class="glow-badge">
-              <span class="glow-dot"></span> AI Engineer-Freelancer
+         NEWS TICKER (Below Navbar, Home Page)
+        ════════════════════════════════════════ -->
+        <div class="news-ticker-bar" id="news-ticker">
+          <div class="news-ticker-label">⚡ LIVE</div>
+          <div class="news-ticker-track-wrap">
+            <div class="news-ticker-track">
+              <span>🤖 AI & Automation Solutions for Business</span>
+              <span class="sep-star">★</span>
+              <span
+                >💻 Full-Stack MERN Development · React · Node.js · Python</span
+              >
+              <span class="sep-star">★</span>
+              <span
+                >📈 Stock Market Training · Technical Analysis · Options
+                Strategy</span
+              >
+              <span class="sep-star">★</span>
+              <span
+                >🎯 Prompt Engineering · AI Content Creation · 30+ AI
+                Tools</span
+              >
+              <span class="sep-star">★</span>
+              <span
+                >📊 Business Analytics · Dashboards · Financial Reporting</span
+              >
+              <span class="sep-star">★</span>
+              <span
+                >🌐 Digital Marketing · SEO · Social Media · Lead
+                Generation</span
+              >
+              <span class="sep-star">★</span>
+              <span
+                >🔗 Agentic AI Workflow · 24/7 AI-Powered Project Delivery</span
+              >
+              <span class="sep-star">★</span>
+              <span>🤖 AI & Automation Solutions for Modern Business</span>
+              <span class="sep-star">★</span>
+              <span
+                >💻 Full-Stack MERN Development · React · Node.js · Python</span
+              >
+              <span class="sep-star">★</span>
+              <span
+                >📈 Stock Market Training · Technical Analysis · Options
+                Strategy</span
+              >
+              <span class="sep-star">★</span>
+              <span
+                >🎯 Prompt Engineering · AI Content Creation · 30+ AI
+                Tools</span
+              >
+              <span class="sep-star">★</span>
+              <span
+                >📊 Business Analytics · Dashboards · Financial Reporting</span
+              >
+              <span class="sep-star">★</span>
+              <span
+                >🌐 Digital Marketing · SEO · Social Media · Lead
+                Generation</span
+              >
+              <span class="sep-star">★</span>
+              <span
+                >🔗 Agentic AI Workflow · 24/7 AI-Powered Project Delivery</span
+              >
+              <span class="sep-star">★</span>
             </div>
-            <h2 class="page-title">About Me</h2>
-            <p class="page-subtitle">
-              Prompt Engineer · AI Content Creator · Stock Market Trainer ·
-              Software Developer
+          </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+         HOME PAGE 
+        ════════════════════════════════════════ -->
+        <article class="page active" id="page-home">
+          <!-- ── HERO SECTION ── -->
+          <div class="home-hero">
+            <div class="home-hero-badge">
+              E-ACCESS ENTERPRISES · AI &amp; AUTOMATION HUB
+            </div>
+            <h1 class="home-hero-title">
+              Futuristic Solutions<br />Powered by AI &amp; Automation
+            </h1>
+            <p class="home-hero-sub">
+              Software Development · IoT · Stock Markets · Digital Accounting ·
+              AI Engineering ·
             </p>
           </div>
 
-          <!-- Marquee -->
-          <div class="marquee-wrap">
-            <div class="marquee-track">
-              <span>Work Remotely</span><span class="sep-dot">◆</span>
-              <span>Agentic AI workflow</span><span class="sep-dot">◆</span>
-              <span>Freelancer</span><span class="sep-dot">◆</span>
-              <span>AI Prompting</span><span class="sep-dot">◆</span>
-              <span>Digital Marketing</span><span class="sep-dot">◆</span>
-              <span>Stock Analysis</span><span class="sep-dot">◆</span>
-              <span>Content Creation</span><span class="sep-dot">◆</span>
-              <span>Stock Market Training</span><span class="sep-dot">◆</span>
-              <span>Entrepreneurship</span><span class="sep-dot">◆</span>
-              <span>React</span><span class="sep-dot">◆</span>
-              <span>Node.js</span><span class="sep-dot">◆</span>
-              <span>MongoDB</span><span class="sep-dot">◆</span>
-              <span>Express.js</span><span class="sep-dot">◆</span>
-              <span>Python</span><span class="sep-dot">◆</span>
+          <!-- ── 2. FULL-PAGE HOME CAROUSEL ── -->
+          <div class="home-carousel-section">
+            <div class="home-section-label">✦ Featured Showcase</div>
+            <div style="position: relative">
+              <div class="home-carousel-wrapper" id="home-carousel">
+                <div class="home-carousel-inner">
+                  <div class="carousel-track" id="home-carousel-track">
+                    <!-- Slide 1 -->
+                    <div class="carousel-slide active">
+                      <img
+                        src="/Asset/Home IMG/All in one.jpg"
+                        alt="e-access Enterprise Solution"
+                        loading="eager"
+                      />
+                      <div class="slide-caption">
+                        <h2>e-access Enterprise Solution</h2>
+                        <p>4 Firms · 1 Vision · Unified Digital Ecosystem</p>
+                      </div>
+                    </div>
+                    <!-- Slide 2 -->
+                    <div class="carousel-slide">
+                      <img
+                        src="/Asset/Home IMG/Dig Accounting.jpg"
+                        alt="Digital Accounting"
+                        loading="lazy"
+                      />
+                      <div class="slide-caption">
+                        <h2>AI-Powered Digital Accounting</h2>
+                        <p>
+                          Real-time Dashboards 24x7 access by clients · Online /
+                          Offline mode · Weekly Reports Dashboard
+                        </p>
+                      </div>
+                    </div>
+                    <!-- Slide 3 -->
+                    <div class="carousel-slide">
+                      <img
+                        src="/Asset/Home IMG/Content Creator.jpg"
+                        alt="Content Creation"
+                        loading="lazy"
+                      />
+                      <div class="slide-caption">
+                        <h2>AI Content Creation Studio</h2>
+                        <p>
+                          Faceless videos · Reels · AI voiceover · Brand assets
+                        </p>
+                      </div>
+                    </div>
+                    <!-- Slide 4 -->
+                    <div class="carousel-slide">
+                      <img
+                        src="/Asset/Home IMG/Stock Market.png"
+                        alt="Stock Market"
+                        loading="lazy"
+                      />
+                      <div class="slide-caption">
+                        <h2>Share Market Training & Guidance</h2>
+                        <p>
+                          Technical analysis · Fundamental Analysis · Live
+                          Market training · Chart Reading Tactics
+                        </p>
+                      </div>
+                    </div>
+                    <!-- Slide 5 -->
+                    <div class="carousel-slide">
+                      <img
+                        src="/Asset/Home IMG/Chatbot.jpg"
+                        alt="AI Chatbot"
+                        loading="lazy"
+                      />
+                      <div class="slide-caption">
+                        <h2>Intelligent AI Chatbots</h2>
+                        <p>
+                          Lead generation · 24/7 customer engagement bots ·
+                          Ready to customize as per client requirements
+                        </p>
+                      </div>
+                    </div>
+                    <!-- Slide 6 -->
+                    <div class="carousel-slide">
+                      <img
+                        src="/Asset/Home IMG/Adv Agency.jpg"
+                        alt="Digital Marketing Agency"
+                        loading="lazy"
+                      />
+                      <div class="slide-caption">
+                        <h2>Digital Marketing & Advertising Agency</h2>
+                        <p>
+                          FaceBook Ads · Youtube Influence Marketing · Adoption
+                          of AI in Current Business / Role
+                        </p>
+                      </div>
+                    </div>
+                    <!-- Slide 7 -->
+                    <div class="carousel-slide">
+                      <img
+                        src="/Asset/Home IMG/ERP Soft.jpg"
+                        alt="Full-Stack Web Development"
+                        loading="lazy"
+                      />
+                      <div class="slide-caption">
+                        <h2>Full-Stack Web Development</h2>
+                        <p>React · MERN · Python · HTML/CSS/JavaScript</p>
+                      </div>
+                    </div>
+                    <!-- Slide 8 -->
+                    <div class="carousel-slide">
+                      <img
+                        src="/Asset/Home IMG/DIY.jpg"
+                        alt="IoT Automation"
+                        loading="lazy"
+                      />
+                      <div class="slide-caption">
+                        <h2>IoT &amp; Robotic Automation</h2>
+                        <p>Arduino · ESP32 · Smart systems · RGB LED control</p>
+                      </div>
+                    </div>
+                    <!-- Slide 9 -->
+                    <div class="carousel-slide">
+                      <img
+                        src="/Asset/Home IMG/Prompt Engg.jpg"
+                        alt="Prompt Engineering"
+                        loading="lazy"
+                      />
+                      <div class="slide-caption">
+                        <h2>Prompt Engineering</h2>
+                        <p>
+                          AI prompt design · Natural language processing ·
+                          Conversational AI · Custom prompt development
+                        </p>
+                      </div>
+                    </div>
+                    <!-- Slide 10 -->
+                    <div class="carousel-slide">
+                      <img
+                        src="/Asset/Home IMG/Labour.jpg"
+                        alt="Labour Management System"
+                        loading="lazy"
+                      />
+                      <div class="slide-caption">
+                        <h2>
+                          Labour Management System &amp; Manpower Services
+                        </h2>
+                        <p>
+                          Labour compliance · Manpower outsourcing for various
+                          industries
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Arrows -->
+                <button class="carousel-arrow prev" id="home-carousel-prev">
+                  &#8249;
+                </button>
+                <button class="carousel-arrow next" id="home-carousel-next">
+                  &#8250;
+                </button>
+                <div class="slide-counter" id="home-slide-counter">01 / 10</div>
+                <div
+                  class="carousel-progress"
+                  id="home-carousel-progress"
+                ></div>
+              </div>
+              <div class="carousel-dots" id="home-carousel-dots"></div>
             </div>
           </div>
 
-          <!-- Stats -->
-          <div class="stats-row">
-            <div class="stat">
-              <div class="stat-num">23 +</div>
-              <div class="stat-label">
-                Years of Experience in Multi-Skills & Diff-Sectors
+          <!-- ── 3. STATUS BAR ── -->
+          <div class="home-stats-bar">
+            <div class="home-stat-item">
+              <span class="home-stat-num">23 +</span>
+              <div class="home-stat-label">Years of Multi-Skill Experience</div>
+            </div>
+            <div class="home-stat-item">
+              <span class="home-stat-num">200 +</span>
+              <div class="home-stat-label">Projects Delivered</div>
+            </div>
+            <div class="home-stat-item">
+              <span class="home-stat-num">25 +</span>
+              <div class="home-stat-label">Students Trained</div>
+            </div>
+            <div class="home-stat-item">
+              <span class="home-stat-num">399 +</span>
+              <div class="home-stat-label">
+                Global Clients &amp; Individuals
               </div>
             </div>
-            <div class="stat">
-              <div class="stat-num">200 +</div>
-              <div class="stat-label">Projects Completed</div>
-            </div>
-            <div class="stat">
-              <div class="stat-num">25 +</div>
-              <div class="stat-label">
-                Students Trained (Stock Market)(DIY)(Coding)
-              </div>
-            </div>
-            <div class="stat">
-              <div class="stat-num">399 +</div>
-              <div class="stat-label">
-                Global Live Clients + local Individuals
-              </div>
-            </div>
-            <div class="stat">
-              <div class="stat-num">∞</div>
-              <div class="stat-label">AI Prompting Ideas Brewing</div>
+            <div class="home-stat-item">
+              <span class="home-stat-num">∞</span>
+              <div class="home-stat-label">AI Ideas Brewing Daily</div>
             </div>
           </div>
 
-          <!-- Bio -->
-          <div class="about-bio">
-            <p>
-              Hi, I'm Sajid Akhtar — a passionate AI Prompt Engineer, Content
-              Creator, Software Developer, and Stock Market Trainer with over 23
-              years of experience across multiple industries. I specialize in
-              leveraging the power of AI to create innovative solutions that
-              drive business growth and enhance user experiences. my unique
-              blend of technical expertise and creative problem-solving allows
-              me to deliver exceptional results for clients worldwide. Whether
-              it's developing cutting-edge software, crafting compelling
-              content.
-            </p>
-
-            <p>
-              🚀 Why Choose My Services? <br />
-              • 24/7 Availability: AI agents team ensures project progress.
-              <br />
-              • Multi-Niche Expertise: 10 Specialized Services under one roof
-              <br />
-              • Rapid Followup: Agentic AI Workflow Accelerate work criteria.
-              <br />
-              • Cost-Effective: Get Enterprise-level Results at Freelance rates
-              <br />
-              • Scalable Solutions: Handle Multiple Projects Simultaneously (AI
-              Powered-Resoning LL Models which ensures Error, Bug free solution
-              and Client's Criteria/Strategy Oriented) <br />
-            </p>
-          </div>
-
-          <!-- ── FIX 2: Services Grid — 9 Cards with Know More buttons ── -->
-          <div class="section-label">
-            9 Multi NICHE Services (Click on Know More as per their Interest &
-            Requirement to get Detailed Information about that Service)
+          <!-- ── 4. 9 SERVICE CARDS ── -->
+          <div class="home-section-label">
+            10 Multi-Niche Services — Click Know More for Details
           </div>
           <div class="services-grid">
             <!-- Card 1 -->
@@ -5307,22 +6182,45 @@
               </button>
             </div>
 
-            <!-- Card 9 (New) -->
+            <!-- Card 9 -->
             <div
               class="service-card"
               data-svc-modal
               data-svc-icon="📊"
-              data-svc-heading="Business Analytics & Reporting"
-              data-svc-sub="Excel · Data Viz · Dashboards · Insights"
-              data-svc-body="<p>Data without insight is just noise. I help small businesses and entrepreneurs make sense of their numbers — from sales figures and website analytics to marketing performance and financial projections. My business analytics service turns raw data into clear, actionable reports that guide smart decisions.</p><p>I work with Excel, Google Sheets, and basic data visualization tools to build custom dashboards, monthly performance reports, and financial models. Whether you need a simple sales tracker, a marketing ROI calculator, or a full business performance dashboard — I can design it to fit your workflow and present it in a way that's easy to understand and act on.</p><p>My analytics work is especially valuable for: e-commerce stores tracking order and revenue data, stock market investors monitoring portfolio performance, digital marketers measuring campaign effectiveness, freelancers and consultants managing client invoices and income projections, and small business owners who want to understand their numbers without hiring a full-time analyst.</p><p>I also provide training for teams who want to manage their own reporting going forward — teaching them how to maintain dashboards, create pivot tables, and interpret key metrics. My goal is not just to build you a report, but to build your team's data literacy. If you're making business decisions based on gut feeling rather than data, let's change that. Book a consultation and let's identify the 3 numbers that matter most for your business right now.</p>"
+              data-svc-heading="Manpower Supply & Labour Management"
+              data-svc-sub="Workforce Optimization · Labour Productivity · Staffing Solutions"
+              data-svc-body="<p>In today's dynamic business environment, effective manpower supply and labor management are critical for maintaining operational efficiency and competitiveness. My Manpower Supply & Labour Management service is designed to help businesses optimize their workforce allocation, enhance labor productivity, and ensure seamless staffing solutions. I specialize in developing strategies that align human resources with business objectives, ensuring that the right people are in the right places at the right times.</p><p>Using a combination of industry best practices and advanced analytics, I help organizations streamline their labor processes, reduce costs, and improve overall performance. Whether you need assistance with temporary staffing, workforce planning, or labor optimization, I can provide tailored solutions that meet your specific needs and industry requirements.</p><p>My approach combines deep understanding of labor markets with strategic planning to deliver results that drive long-term success. Clients have benefited from my services by achieving better resource utilization, improved employee satisfaction, and enhanced operational efficiency. If you're looking to optimize your workforce management strategies, let's work together to build the foundation for a more effective and productive organization.</p>"
             >
               <div class="service-card-top">
                 <div class="service-icon">📊</div>
                 <div>
-                  <h4>Business Analytics & Reporting</h4>
+                  <h4>Manpower Supply & Labour Management</h4>
                   <p>
-                    Building dashboards, financial models, and data reports that
-                    drive smart business decisions.
+                    Optimizing workforce allocation and labor productivity for
+                    enhanced operational efficiency.
+                  </p>
+                </div>
+              </div>
+              <button class="know-more-btn" data-svc-trigger>
+                Know More →
+              </button>
+            </div>
+            <!-- Card 10 -->
+            <div
+              class="service-card"
+              data-svc-modal
+              data-svc-icon="🗄️"
+              data-svc-heading="AI Assistant & Chat Bot"
+              data-svc-sub="Intelligent AI Assistants · Conversational AI · 24/7 Support"
+              data-svc-body="<p>Building intelligent AI assistants and chatbots is essential for modern businesses looking to enhance customer engagement, streamline operations, and drive lead generation. My AI Assistant & Chat Bot services are designed to create seamless, human-like interactions that provide instant support and valuable insights to your customers.</p><p>Using cutting-edge natural language processing (NLP) and machine learning technologies, I develop chatbots that can understand context, learn from interactions, and continuously improve their performance. Whether you need a virtual assistant for your website, a customer service chatbot, or an internal communication tool, I can create a solution that fits your unique needs.</p><p>My approach focuses on delivering personalized experiences that not only meet but exceed user expectations. Clients have reported increased customer satisfaction, reduced response times, and improved operational efficiency after implementing my AI assistant solutions. If you're ready to leverage the power of AI for better customer engagement, let's work together to build a solution that drives real results.</p>"
+            >
+              <div class="service-card-top">
+                <div class="service-icon">🗄️</div>
+                <div>
+                  <h4>AI Assistant & Chat Bot</h4>
+                  <p>
+                    Building intelligent AI assistants and chatbots for lead
+                    generation, customer engagement, and 24/7 support.
                   </p>
                 </div>
               </div>
@@ -5333,114 +6231,112 @@
           </div>
           <!-- /services-grid -->
 
-          <!-- Testimonials -->
-          <div class="section-label">Global Community, Client's Review</div>
-          <div class="testimonials-grid">
-            <div
-              class="testimonial-card"
-              data-modal
-              data-modal-name="Ravi Sharma"
-              data-modal-role="Stock Market Student"
-              data-modal-img="https://ui-avatars.com/api/?name=Ravi+Sharma&background=FFB800&color=000"
-              data-modal-text="His stock market training is exceptional. He breaks down complex concepts into simple, actionable strategies. Within 3 months of training I was making consistent profitable trades. I had tried 3 other courses before this and none of them came close to the practical value I got here."
-            >
-              <div class="quote-mark">"</div>
-              <p class="testimonial-text">
-                His stock market training is exceptional. He breaks down complex
-                concepts into simple, actionable strategies within 3 months.
-              </p>
-              <div class="testimonial-author">
-                <div class="testimonial-avatar">
-                  <img
-                    src="https://ui-avatars.com/api/?name=Ravi+Sharma&background=1a1f2e&color=FFB800"
-                    alt="Ravi Sharma"
-                  />
-                </div>
-                <div>
-                  <div class="testimonial-author-name">Ravi Sharma</div>
-                  <div class="testimonial-author-role">
-                    Stock Market Student
-                  </div>
-                </div>
-              </div>
+          <!-- ── 5. TEAM MEMBERS ── -->
+          <div class="team-section">
+            <div class="home-section-label">
+              Meet the Team — The Minds Behind Access Enterprises
             </div>
-            <div
-              class="testimonial-card"
-              data-modal
-              data-modal-name="Priya Kadam"
-              data-modal-role="Startup Founder"
-              data-modal-img="https://ui-avatars.com/api/?name=Priya+Kadam&background=FFB800&color=000"
-              data-modal-text="Working with this developer transformed our startup's online presence. The React frontend he built was sleek, fast, and exactly what we envisioned. A true professional. He delivered on time, communicated clearly throughout, and even added features we hadn't thought of."
-            >
-              <div class="quote-mark">"</div>
-              <p class="testimonial-text">
-                Transformed our startup's online presence. The React frontend
-                was sleek, fast, and exactly what we envisioned. A true
-                professional.
-              </p>
-              <div class="testimonial-author">
-                <div class="testimonial-avatar">
+            <div class="team-grid">
+              <!-- Team Member 1 -->
+              <div class="team-card">
+                <div class="team-avatar">
                   <img
-                    src="https://ui-avatars.com/api/?name=Priya+Kadam&background=1a1f2e&color=FFB800"
-                    alt="Priya Kadam"
+                    src="https://ui-avatars.com/api/?name=Sajid+Akhtar&background=001a2e&color=00e5ff&size=128&bold=true"
+                    alt="Sajid Akhtar"
                   />
                 </div>
-                <div>
-                  <div class="testimonial-author-name">Priya Kadam</div>
-                  <div class="testimonial-author-role">Startup Founder</div>
-                </div>
+                <div class="team-name">Sajid Akhtar</div>
+                <div class="team-role">Founder · AI Engineer</div>
+                <p class="team-bio">
+                  23+ years across tech, finance &amp; content. Full-stack
+                  developer, prompt engineer, stock market trainer, and the
+                  driving force behind Access Enterprises' AI-powered services.
+                </p>
               </div>
-            </div>
-            <div
-              class="testimonial-card"
-              data-modal
-              data-modal-name="Amit Desai"
-              data-modal-role="Content Creator"
-              data-modal-img="https://ui-avatars.com/api/?name=Amit+Desai&background=FFB800&color=000"
-              data-modal-text="The AI prompt engineering consultation was a game changer for my content workflow. I now produce 10x more content in half the time, with better quality than ever before. He taught me not just what to do, but why it works — so I can adapt the system myself as tools evolve."
-            >
-              <div class="quote-mark">"</div>
-              <p class="testimonial-text">
-                The AI prompt engineering consultation was a game-changer. I
-                produce 10x more content in half the time, with better quality.
-              </p>
-              <div class="testimonial-author">
-                <div class="testimonial-avatar">
+
+              <!-- Team Member 2 -->
+              <div class="team-card">
+                <div class="team-avatar">
                   <img
-                    src="https://ui-avatars.com/api/?name=Amit+Desai&background=1a1f2e&color=FFB800"
-                    alt="Amit Desai"
+                    src="https://ui-avatars.com/api/?name=Aisha+Khan&background=1a001a&color=ff00ff&size=128&bold=true"
+                    alt="Aisha Khan"
                   />
                 </div>
-                <div>
-                  <div class="testimonial-author-name">Amit Desai</div>
-                  <div class="testimonial-author-role">Content Creator</div>
-                </div>
+                <div class="team-name">Aisha Khan</div>
+                <div class="team-role">AI Content Strategist</div>
+                <p class="team-bio">
+                  Specialist in AI-generated multimedia content. Manages brand
+                  voice, social campaigns, and faceless video production
+                  pipelines using 15+ generative AI tools.
+                </p>
               </div>
-            </div>
-            <div
-              class="testimonial-card"
-              data-modal
-              data-modal-name="Amit Desai"
-              data-modal-role="Content Creator"
-              data-modal-img="https://ui-avatars.com/api/?name=Amit+Desai&background=FFB800&color=000"
-              data-modal-text="The AI prompt engineering consultation was a game changer for my content workflow. I now produce 10x more content in half the time, with better quality than ever before. He taught me not just what to do, but why it works — so I can adapt the system myself as tools evolve."
-            >
-              <div class="quote-mark">"</div>
-              <p class="testimonial-text">
-                The AI prompt engineering consultation was a game-changer. I
-                produce 10x more content in half the time, with better quality.
-              </p>
-              <div class="testimonial-author">
-                <div class="testimonial-avatar">
+
+              <!-- Team Member 3 -->
+              <div class="team-card">
+                <div class="team-avatar">
                   <img
-                    src="https://ui-avatars.com/api/?name=Amit+Desai&background=1a1f2e&color=FFB800"
-                    alt="Amit Desai"
+                    src="https://ui-avatars.com/api/?name=Rahul+Verma&background=1a1000&color=d4a017&size=128&bold=true"
+                    alt="Rahul Verma"
                   />
                 </div>
-                <div>
-                  <div class="testimonial-author-name">Amit Desai</div>
-                  <div class="testimonial-author-role">Content Creator</div>
+                <div class="team-name">Rahul Verma</div>
+                <div class="team-role">IoT & Robotics Lead</div>
+                <p class="team-bio">
+                  Electronics engineer specializing in Arduino, ESP32, and
+                  Raspberry Pi solutions. Designs smart automation systems, IoT
+                  dashboards, and custom RGB installations.
+                </p>
+              </div>
+
+              <!-- Team Member 4 -->
+              <div class="team-card">
+                <div class="team-avatar">
+                  <img
+                    src="https://ui-avatars.com/api/?name=Priya+Nair&background=001a10&color=39ffb0&size=128&bold=true"
+                    alt="Priya Nair"
+                  />
                 </div>
+                <div class="team-name">Priya Nair</div>
+                <div class="team-role">Business Analyst</div>
+                <p class="team-bio">
+                  Data-driven strategist handling dashboards, KPI reporting, and
+                  financial modelling for SME clients. Turns raw numbers into
+                  clear, actionable business intelligence.
+                </p>
+              </div>
+
+              <!-- Team Member 5 -->
+              <div class="team-card">
+                <div class="team-avatar">
+                  <img
+                    src="https://ui-avatars.com/api/?name=Zaid+Sheikh&background=00001a&color=0066ff&size=128&bold=true"
+                    alt="Zaid Sheikh"
+                  />
+                </div>
+                <div class="team-name">Zaid Sheikh</div>
+                <div class="team-role">Full-Stack Developer</div>
+                <p class="team-bio">
+                  MERN stack developer focused on high-performance React
+                  frontends and scalable Node.js APIs. Delivers clean,
+                  well-tested codebases for web apps and client dashboards.
+                </p>
+              </div>
+
+              <!-- Team Member 6 -->
+              <div class="team-card">
+                <div class="team-avatar">
+                  <img
+                    src="https://ui-avatars.com/api/?name=Meera+Joshi&background=1a001a&color=ff00ff&size=128&bold=true"
+                    alt="Meera Joshi"
+                  />
+                </div>
+                <div class="team-name">Meera Joshi</div>
+                <div class="team-role">Digital Marketing Lead</div>
+                <p class="team-bio">
+                  Growth hacker managing SEO, paid ad campaigns, and social
+                  media funnels. Brings data-backed strategies that consistently
+                  increase leads, reach, and ROI for clients.
+                </p>
               </div>
             </div>
           </div>
@@ -6460,7 +7356,7 @@
                       <button
                         class="btn-know"
                         onclick="openGallery(1)"
-                        data-gallery='[{"src":"https://picsum.photos/seed/g1a/900/506","title":"Dashboard Overview","desc":"Main analytics panel with real-time KPI metrics and trend analysis charts."},{"src":"https://picsum.photos/seed/g1b/900/506","title":"ML Model Insights","desc":"Model performance metrics, confusion matrix, and prediction confidence scores."},{"src":"https://picsum.photos/seed/g1c/900/506","title":"User Reports","desc":"Custom report builder with drag-and-drop widgets and export options."},{"src":"https://picsum.photos/seed/g1d/900/506","title":"Mobile View","desc":"Fully responsive design optimized for tablets and mobile devices."}]'
+                        data-gallery='[{"src":"/Asset/Project IMG/A.1.jpg","title":"Software Development","desc":"Full Stack Software Development & Vibe Coding Plateforms, Delivers Seamless User Experiences"},{"src":"/Asset/Project IMG/A.2.jpg","title":"Labour Management Software","desc":"Provides efficient labour scheduling and tracking capabilities.Specially design for Textile sectors Powerloom Industry"},{"src":"/Asset/Project IMG/A.3.jpg","title":"LMS Work Flow","desc":"Start from workers hire & fire basis to Permanent & All kind of Work & Labour systems"},{"src":"/Asset/Project IMG/A.4.jpg","title":"Pharmacy Store Software","desc":"Full stock & Inventory Management system with daily sales & Expiry Tracking, Storage shortage & access Records"}]'
                       >
                         🔍 Know More
                       </button>
@@ -6513,7 +7409,7 @@
                       <button
                         class="btn-know"
                         onclick="openGallery(2)"
-                        data-gallery='[{"src":"https://picsum.photos/seed/g2a/900/506","title":"Homepage Design","desc":"Hero section with featured products, promotional banners, and category navigation."},{"src":"https://picsum.photos/seed/g2b/900/506","title":"Product Detail Page","desc":"360° product view with size selector, reviews, and one-click checkout button."},{"src":"https://picsum.photos/seed/g2c/900/506","title":"Admin Dashboard","desc":"Vendor management panel with order tracking, analytics, and inventory control."},{"src":"https://picsum.photos/seed/g2d/900/506","title":"Mobile Checkout","desc":"Streamlined single-page mobile checkout with Apple Pay and Google Pay support."}]'
+                        data-gallery='[{"src":"/Asset/Project IMG/B.1.jpg","title":"Homepage Design","Learn Indian Stock Market Analysis":"Complete one on one daily learning & Live Market Practicing of Technical & Fundamental Analysis"},{"src":"/Asset/Project IMG/B.2.jpg","title":"Deep Dive in Technical Analysis","desc":"Understanding From Candle stick Pattern, Supply Demand Zone, Chart Analize to Final Strategy Building to Invest in Perticular stocks"},{"src":"/Asset/Project IMG/B.3.jpg","title":"Advertising Landing Page","desc":"Instead of learn from youtube, our training session provides one o one mentorship"},{"src":"/Asset/Project IMG/B.4.jpg","title":"Our Course Structure","desc":"As per the images shows, at the end of learning day, you will become a successfull traders by following our strategy."}]'
                       >
                         🔍 Know More
                       </button>
@@ -6567,7 +7463,7 @@
                       <button
                         class="btn-know"
                         onclick="openGallery(3)"
-                        data-gallery='[{"src":"https://picsum.photos/seed/g3a/900/506","title":"Live Chart View","desc":"Real-time candlestick chart with 50+ technical indicators and drawing tools."},{"src":"https://picsum.photos/seed/g3b/900/506","title":"Portfolio Tracker","desc":"Multi-asset portfolio with P&L analysis, sector allocation, and risk metrics."},{"src":"https://picsum.photos/seed/g3c/900/506","title":"AI Predictions","desc":"Machine learning model showing buy/sell signals with confidence intervals."},{"src":"https://picsum.photos/seed/g3d/900/506","title":"Training Module","desc":"Interactive stock market course with quizzes, videos, and live paper trading."}]'
+                        data-gallery='[{"src":"/Asset/Project IMG/C.1.jpg","title":"Accounting & Book Keeping AI Powered Solution","desc":"Single User Input and Accounts/Ledger Autoamtion Entry, Book keeping & Accounting Services"},{"src":"/Asset/Project IMG/C.2.jpg","title":"Textile Vertual software Flow","desc":"Provides All Record entry and tracking from Yarn Purchasing to finished Grey Cloth"},{"src":"/Asset/Project IMG/C.3.jpg","title":"Weekly Data Records","desc":"Provide Weekly Profit & Loss Statements with Balance Sheet & Ledger Reports."},{"src":"/Asset/Project IMG/C.4.jpg","title":"Accounts & Book keeping Services","desc":"Online & Offline mode 256 bit end to end encrypted personal data secure system"}]'
                       >
                         🔍 Know More
                       </button>
@@ -6620,7 +7516,7 @@
                       <button
                         class="btn-know"
                         onclick="openGallery(4)"
-                        data-gallery='[{"src":"https://picsum.photos/seed/g4a/900/506","title":"Kanban Board","desc":"Drag-and-drop task management with custom labels, priorities, and due dates."},{"src":"https://picsum.photos/seed/g4b/900/506","title":"Time Tracker","desc":"Pomodoro-style timer with session logs, charts, and productivity trends."},{"src":"https://picsum.photos/seed/g4c/900/506","title":"Team Workspace","desc":"Shared project spaces with comments, file attachments, and @mentions."},{"src":"https://picsum.photos/seed/g4d/900/506","title":"AI Scheduler","desc":"Smart daily planner that blocks time automatically based on your habits."}]'
+                        data-gallery='[{"src":"/Asset/Project IMG/D.1.jpg","title":"Content Creation Services","desc":"No need to hire Script Writer, DTP Designer, Video Editor for your Content Creation."},{"src":"/Asset/Project IMG/D.2.jpg","title":"Dual Desk Setup","desc":"Highly Configured Computer and Office setup provides Smooth and fast results."},{"src":"/Asset/Project IMG/D.3.jpg","title":"4 Firms, 1 Office Setup","SEBI, ISO Certified, GST Registed IT Tech Firms & Institution.":"Shared project spaces with comments, file attachments, and @mentions."},{"src":"/Asset/Project IMG/D.4.jpg","title":"AI Prompting Sample","desc":"Using AI Tailoring & Prompting Techniques, you could also generate unlimited images as per your criteria & NICHE selection. I am here to help & Guide you 24x7"}]'
                       >
                         🔍 Know More
                       </button>
@@ -6674,7 +7570,7 @@
                       <button
                         class="btn-know"
                         onclick="openGallery(5)"
-                        data-gallery='[{"src":"https://picsum.photos/seed/g5a/900/506","title":"Campaign Overview","desc":"Multi-channel campaign dashboard with budget allocation and performance metrics."},{"src":"https://picsum.photos/seed/g5b/900/506","title":"A/B Test Builder","desc":"Visual ad variant creator with automated split testing and statistical analysis."},{"src":"https://picsum.photos/seed/g5c/900/506","title":"ROI Analytics","desc":"Revenue attribution modeling with customer journey mapping across touchpoints."},{"src":"https://picsum.photos/seed/g5d/900/506","title":"Competitor Insights","desc":"Market intelligence panel comparing ad spend, keywords, and creative strategies."}]'
+                        data-gallery='[{"src":"/Asset/Project IMG/E.1.jpg","Digital Marketing Agency":"","desc":"Digital Marketing Work Flow"},{"src":"/Asset/Project IMG/E.2.jpg","title":"Chat Bot Implementation","desc":"Impliment and customize AI Assistant or chat bot integration depending uopn clients criteria & their NICHE"},{"src":"/Asset/Project IMG/E.3.jpg","title":"Ready Chat Bot","desc":"Jai-kia is ready to serve you AI Powered chat bot, which Talks to your customers as Personal Assistant of your business"},{"src":"/Asset/Project IMG/E.4.jpg","title":"SME Web Application","desc":"Use ful For small shop owners like, Chinese Shop, Fast Food Stall & Resturents, Tea Stall & Resturents,"}]'
                       >
                         🔍 Know More
                       </button>
@@ -6726,7 +7622,7 @@
                       <button
                         class="btn-know"
                         onclick="openGallery(6)"
-                        data-gallery='[{"src":"https://picsum.photos/seed/g6a/900/506","title":"Prompt Editor","desc":"Split-view editor with syntax highlighting, variable injection, and live preview."},{"src":"https://picsum.photos/seed/g6b/900/506","title":"Model Comparison","desc":"Side-by-side output comparison across GPT-4, Claude, Gemini, and Llama models."},{"src":"https://picsum.photos/seed/g6c/900/506","title":"Analytics Panel","desc":"Token usage, latency, cost, and quality score tracking across prompt iterations."},{"src":"https://picsum.photos/seed/g6d/900/506","title":"Prompt Marketplace","desc":"Community marketplace to publish, discover, and monetize prompt templates."}]'
+                        data-gallery='[{"src":"/Asset/Project IMG/F.1.jpg","title":"Website Design Sample","desc":"Mobile First, Responsive Dynamic Websites Design & Development"},{"src":"/Asset/Project IMG/F.2.jpg","title":"Haj-Umrah Tours & Travels Website","desc":"Dynamic and Responsive Ready to Host Website for Haj Umrah Pilgrims Service Provider"},{"src":"/Asset/Project IMG/F.3.jpg","title":"Realstate Business Website","desc":"Ready to Deploy Real State Business website Sample"},{"src":"/Asset/Project IMG/F.4.jpg","title":"","desc":"Full Stack IT Company Website with AI Content Generation, SEO Optimization including Chat Bot Assist Service Web Page"}]'
                       >
                         🔍 Know More
                       </button>
@@ -6780,7 +7676,7 @@
                       <button
                         class="btn-know"
                         onclick="openGallery(7)"
-                        data-gallery='[{"src":"https://picsum.photos/seed/g7a/900/506","title":"Auth System","desc":"JWT + OAuth 2.0 authentication with Google, GitHub, and email magic links."},{"src":"https://picsum.photos/seed/g7b/900/506","title":"Billing Dashboard","desc":"Stripe subscription management with plan tiers, invoices, and usage metering."},{"src":"https://picsum.photos/seed/g7c/900/506","title":"Admin Panel","desc":"Super-admin interface to manage tenants, users, feature flags, and system health."},{"src":"https://picsum.photos/seed/g7d/900/506","title":"API Docs","desc":"Auto-generated Swagger documentation with live playground for all endpoints."}]'
+                        data-gallery='[{"src":"/Asset/Project IMG/G.1.jpg","title":"Web Application Try-on","desc":"Ready to Deploy AI Powered Image Generation Application Designed specially for ReadyMade Garments,Shops & Showroom"},{"src":"/Asset/Project IMG/G.2.jpg","title":"Perfume Parlour","desc":"Specially designed e commerce web application for Perfume showroom & Shops"},{"src":"/Asset/Project IMG/G.3.jpg","title":"e commerce accounting Apps","desc":"Ready to deploy e commerce web application for any SME business or retail shop owners"},{"src":"/Asset/Project IMG/G.4.jpg","title":"API Docs","desc":"Auto-generated Swagger documentation with live playground for all endpoints."}]'
                       >
                         🔍 Know More
                       </button>
@@ -6834,7 +7730,7 @@
                       <button
                         class="btn-know"
                         onclick="openGallery(8)"
-                        data-gallery='[{"src":"https://picsum.photos/seed/g8a/900/506","title":"Writing Dashboard","desc":"Content calendar with AI scheduling, topic clusters, and keyword research tools."},{"src":"https://picsum.photos/seed/g8b/900/506","title":"AI Editor","desc":"Rich-text editor with inline AI rewrite, tone adjustment, and SEO scoring."},{"src":"https://picsum.photos/seed/g8c/900/506","title":"Brand Voice Training","desc":"Upload existing content to train the AI to match your unique brand personality."},{"src":"https://picsum.photos/seed/g8d/900/506","title":"Publishing Workflow","desc":"One-click publish to WordPress, Webflow, Medium, and social media platforms."}]'
+                        data-gallery='[{"src":"/Asset/Project IMG/H.1.jpg","title":"DIY-Epoxy Art Creation","desc":"Above given is the sample Epoxy Resin Artwork."},{"src":"/Asset/Project IMG/H.2.jpg","title":"LED Lamps","desc":"Purely hand made PVC Materials LED Light Lamps uses in home, Offices"},{"src":"/Asset/Project IMG/H.3.jpg","title":"ESP, IoT Electronic Modules","desc":"Used For Home, Offices, Industry Automation & smart Electronic Modules Prepared in our workshop"},{"src":"/Asset/Project IMG/H.4.jpg","title":"DIY Making Tools & Machineries","desc":"Helps DIY intrested peoples to provide the cheap and handy PVC Made Machineries"}]'
                       >
                         🔍 Know More
                       </button>
@@ -6891,7 +7787,7 @@
                       <button
                         class="btn-know"
                         onclick="openGallery(9)"
-                        data-gallery='[{"src":"https://picsum.photos/seed/g9a/900/506","title":"Course Library","desc":"Searchable catalog with 200+ courses, filters by topic, level, and instructor."},{"src":"https://picsum.photos/seed/g9b/900/506","title":"Video Player","desc":"Custom adaptive video player with speed control, notes, and chapter navigation."},{"src":"https://picsum.photos/seed/g9c/900/506","title":"Certificate System","desc":"Auto-generated blockchain-verified certificates on course completion."},{"src":"https://picsum.photos/seed/g9d/900/506","title":"Leaderboard","desc":"Gamified progress tracking with XP, badges, streaks, and community rankings."}]'
+                        data-gallery='[{"src":"/Asset/Project IMG/I.1.jpg","title":"Course Library","desc":"Searchable catalog with 200+ courses, filters by topic, level, and instructor."},{"src":"/Asset/Project IMG/I.2.jpg","title":"e-books","desc":"Available in a Affordable price, complete library of digital books."},{"src":"/Asset/Project IMG/I.3.jpg","title":"Mentorship for all 9 NICHE","desc":"Mentorship available. Our moto is to provide information globaly, what we have learn."},{"src":"/Asset/Project IMG/I.jpg","title":"Personal Training & Mentorship Available","desc":"As per the given image specification. Join us to become a successful enterpreuner."}]'
                       >
                         🔍 Know More
                       </button>
@@ -7550,11 +8446,11 @@
       // ASK JACK — PERSONAL ASSISTANT INITIALIZATION
       // ══════════════════════════════════════
       function initializeAskJack() {
-        const jackToggle  = document.getElementById("ask-jack-toggle");
-        const jackPanel   = document.getElementById("jack-panel");
+        const jackToggle = document.getElementById("ask-jack-toggle");
+        const jackPanel = document.getElementById("jack-panel");
         const jackCloseBtn = document.getElementById("jack-close-btn");
         const jackSendBtn = document.getElementById("jack-send-btn");
-        const jackInput   = document.getElementById("jack-input");
+        const jackInput = document.getElementById("jack-input");
 
         if (jackToggle && jackPanel) {
           jackToggle.addEventListener("click", () => {
@@ -8418,8 +9314,8 @@
       // 1) Sign up free  2) Add an Email Service  3) Create a Template with these vars:
       //    {{to_email}}, {{client_name}}, {{service}}, {{date}}, {{contact}}
       // 4) Paste your Public Key, Service ID, and Template ID below
-      const EMAILJS_PUBLIC_KEY  = "iFyQ8SkeHwrhKEONY";
-      const EMAILJS_SERVICE_ID  = "service_v19z29u";
+      const EMAILJS_PUBLIC_KEY = "iFyQ8SkeHwrhKEONY";
+      const EMAILJS_SERVICE_ID = "service_v19z29u";
       const EMAILJS_TEMPLATE_ID = "template_s8qxu7f";
 
       if (typeof emailjs !== "undefined") {
@@ -8428,7 +9324,7 @@
 
       // Appointment booking state machine
       let apptState = "IDLE";
-      let apptData  = {};
+      let apptData = {};
 
       function jackAddBubble(text, type) {
         const body = document.getElementById("jack-body");
@@ -8448,12 +9344,16 @@
         div.innerHTML = "<span></span><span></span><span></span>";
         body.appendChild(div);
         body.scrollTop = body.scrollHeight;
-        return function () { if (div.parentNode) div.parentNode.removeChild(div); };
+        return function () {
+          if (div.parentNode) div.parentNode.removeChild(div);
+        };
       }
 
       function jackFindAnswer(input) {
         const text = input.toLowerCase().trim();
-        if (/\b(book|appoint|schedule|meeting|call|session|consult)\b/.test(text)) {
+        if (
+          /\b(book|appoint|schedule|meeting|call|session|consult)\b/.test(text)
+        ) {
           return "__APPT__";
         }
         let bestMatch = null;
@@ -8470,37 +9370,43 @@
         }
         return bestMatch
           ? bestMatch.a
-          : fallbackResponses[Math.floor(Math.random() * fallbackResponses.length)];
+          : fallbackResponses[
+              Math.floor(Math.random() * fallbackResponses.length)
+            ];
       }
 
       function sendAppointmentEmail() {
         if (typeof emailjs === "undefined") {
           jackAddBubble(
-            "✅ Appointment noted! Jack will contact you at " + apptData.email + " to confirm.",
-            "bot"
+            "✅ Appointment noted! Jack will contact you at " +
+              apptData.email +
+              " to confirm.",
+            "bot",
           );
           return;
         }
         emailjs
           .send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
-            to_email:    "sajid713@gmail.com",
+            to_email: "sajid713@gmail.com",
             client_name: apptData.name,
-            service:     apptData.service,
-            date:        apptData.date,
-            contact:     apptData.email,
+            service: apptData.service,
+            date: apptData.date,
+            contact: apptData.email,
           })
           .then(function () {
             jackAddBubble(
               "✅ Appointment confirmed! Jack has been notified and will reach out to you at " +
-                apptData.email + " shortly. Looking forward to working with you! 🙌",
-              "bot"
+                apptData.email +
+                " shortly. Looking forward to working with you! 🙌",
+              "bot",
             );
           })
           .catch(function () {
             jackAddBubble(
               "✅ Your appointment request has been received! Jack will contact you at " +
-                apptData.email + " to confirm the details.",
-              "bot"
+                apptData.email +
+                " to confirm the details.",
+              "bot",
             );
           });
       }
@@ -8528,21 +9434,29 @@
             apptState = "APPT_CONFIRM";
             return (
               "Here's your appointment summary:\n\n" +
-              "👤 Name: " + apptData.name + "\n" +
-              "🛠 Service: " + apptData.service + "\n" +
-              "📅 Date/Time: " + apptData.date + "\n" +
-              "📧 Contact: " + apptData.email + "\n\n" +
+              "👤 Name: " +
+              apptData.name +
+              "\n" +
+              "🛠 Service: " +
+              apptData.service +
+              "\n" +
+              "📅 Date/Time: " +
+              apptData.date +
+              "\n" +
+              "📧 Contact: " +
+              apptData.email +
+              "\n\n" +
               "Reply confirm to finalize, or cancel to start over."
             );
           case "APPT_CONFIRM":
             if (/\b(confirm|yes|ok|sure|proceed|go ahead)\b/i.test(text)) {
               apptState = "IDLE";
-              apptData  = {};
+              apptData = {};
               sendAppointmentEmail();
               return null;
             } else if (/\b(cancel|no|stop|abort)\b/i.test(text)) {
               apptState = "IDLE";
-              apptData  = {};
+              apptData = {};
               return "No problem! Appointment cancelled. Feel free to ask me anything else. 😊";
             }
             return "Please reply confirm to finalize your appointment or cancel to start over.";
@@ -8552,7 +9466,7 @@
       }
 
       function jackSendMessage(overrideText) {
-        const input    = document.getElementById("jack-input");
+        const input = document.getElementById("jack-input");
         const userText = (overrideText || (input ? input.value : "")).trim();
         if (!userText) return;
 
@@ -8577,10 +9491,10 @@
           const answer = jackFindAnswer(userText);
           if (answer === "__APPT__") {
             apptState = "APPT_NAME";
-            apptData  = {};
+            apptData = {};
             jackAddBubble(
               "Sure! Let's book your appointment with Jack. 📅\n\nFirst, what's your full name?",
-              "bot"
+              "bot",
             );
           } else {
             jackAddBubble(answer, "bot");
@@ -8636,9 +9550,9 @@
           document.querySelectorAll(".nav-btn").forEach(function (b) {
             b.classList.remove("active");
           });
-          const page   = document.getElementById("page-" + target);
+          const page = document.getElementById("page-" + target);
           const navBtn = document.querySelector('[data-page="' + target + '"]');
-          if (page)   page.classList.add("active");
+          if (page) page.classList.add("active");
           if (navBtn) navBtn.classList.add("active");
           const jp = document.getElementById("jack-panel");
           if (jp) jp.classList.remove("open");
@@ -8956,6 +9870,176 @@
           }
         };
       }
+
+      // ══════════════════════════════════════
+      // HAMBURGER MOBILE NAV
+      // ══════════════════════════════════════
+      window.addEventListener("load", function initHamburgerNav() {
+        const hamburger = document.getElementById("hamburger-btn");
+        const mobDropdown = document.getElementById("mobile-nav-dropdown");
+        const mobClose = document.getElementById("mob-nav-close");
+        if (!hamburger || !mobDropdown) return;
+
+        function openMobNav() {
+          hamburger.classList.add("open");
+          mobDropdown.classList.add("open");
+          document.body.style.overflow = "hidden";
+        }
+        function closeMobNav() {
+          hamburger.classList.remove("open");
+          mobDropdown.classList.remove("open");
+          document.body.style.overflow = "";
+        }
+
+        hamburger.addEventListener("click", () => {
+          mobDropdown.classList.contains("open") ? closeMobNav() : openMobNav();
+        });
+        if (mobClose) mobClose.addEventListener("click", closeMobNav);
+
+        // Mobile nav buttons → navigate page + close dropdown
+        mobDropdown.querySelectorAll(".mob-nav-btn").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            const target = btn.dataset.mobPage;
+            document
+              .querySelectorAll(".page")
+              .forEach((p) => p.classList.remove("active"));
+            document
+              .querySelectorAll(".nav-btn")
+              .forEach((b) => b.classList.remove("active"));
+            document
+              .querySelectorAll(".mob-nav-btn")
+              .forEach((b) => b.classList.remove("active"));
+            const pageEl = document.getElementById("page-" + target);
+            const navBtn = document.querySelector(
+              '[data-page="' + target + '"]',
+            );
+            if (pageEl) pageEl.classList.add("active");
+            if (navBtn) navBtn.classList.add("active");
+            btn.classList.add("active");
+            closeMobNav();
+            window.scrollTo(0, 0);
+            if (target === "resume") animateSkills();
+          });
+        });
+      });
+
+      // ══════════════════════════════════════
+      // LOGO BUTTON → Navigate to Home
+      // ══════════════════════════════════════
+      const aeLogoBtn = document.getElementById("ae-logo-home");
+      if (aeLogoBtn) {
+        aeLogoBtn.addEventListener("click", () => {
+          document
+            .querySelectorAll(".page")
+            .forEach((p) => p.classList.remove("active"));
+          document
+            .querySelectorAll(".nav-btn")
+            .forEach((b) => b.classList.remove("active"));
+          const homePage = document.getElementById("page-about");
+          const homeBtn = document.querySelector('[data-page="about"]');
+          if (homePage) homePage.classList.add("active");
+          if (homeBtn) homeBtn.classList.add("active");
+          window.scrollTo(0, 0);
+        });
+      }
+
+      // ══════════════════════════════════════
+      // HOME PAGE CAROUSEL
+      // ══════════════════════════════════════
+      (function initHomeCarousel() {
+        const track = document.getElementById("home-carousel-track");
+        const prevBtn = document.getElementById("home-carousel-prev");
+        const nextBtn = document.getElementById("home-carousel-next");
+        const dotsWrap = document.getElementById("home-carousel-dots");
+        const counter = document.getElementById("home-slide-counter");
+        const progress = document.getElementById("home-carousel-progress");
+        if (!track) return;
+
+        const slides = track.querySelectorAll(".carousel-slide");
+        const total = slides.length;
+        let current = 0;
+        let timer = null;
+        const AUTO_DELAY = 4000;
+
+        // Build dots
+        slides.forEach((_, i) => {
+          const btn = document.createElement("button");
+          btn.className = "dot-btn" + (i === 0 ? " active" : "");
+          btn.textContent = String(i + 1).padStart(2, "0");
+          btn.addEventListener("click", () => {
+            goTo(i);
+            resetTimer();
+          });
+          dotsWrap.appendChild(btn);
+        });
+
+        function goTo(idx) {
+          slides[current].classList.remove("active");
+          dotsWrap
+            .querySelectorAll(".dot-btn")
+            [current].classList.remove("active");
+          current = (idx + total) % total;
+          slides[current].classList.add("active");
+          dotsWrap
+            .querySelectorAll(".dot-btn")
+            [current].classList.add("active");
+          if (counter)
+            counter.textContent =
+              String(current + 1).padStart(2, "0") +
+              " / " +
+              String(total).padStart(2, "0");
+        }
+
+        function startTimer() {
+          if (progress) {
+            progress.style.transition = "none";
+            progress.style.width = "0%";
+            requestAnimationFrame(() =>
+              requestAnimationFrame(() => {
+                progress.style.transition = "width " + AUTO_DELAY + "ms linear";
+                progress.style.width = "100%";
+              }),
+            );
+          }
+          timer = setTimeout(() => {
+            goTo(current + 1);
+            startTimer();
+          }, AUTO_DELAY);
+        }
+        function resetTimer() {
+          clearTimeout(timer);
+          startTimer();
+        }
+
+        if (prevBtn)
+          prevBtn.addEventListener("click", () => {
+            goTo(current - 1);
+            resetTimer();
+          });
+        if (nextBtn)
+          nextBtn.addEventListener("click", () => {
+            goTo(current + 1);
+            resetTimer();
+          });
+
+        // Keyboard (only when home page active)
+        document.addEventListener("keydown", (e) => {
+          const homeActive = document
+            .getElementById("page-about")
+            ?.classList.contains("active");
+          if (!homeActive) return;
+          if (e.key === "ArrowLeft") {
+            goTo(current - 1);
+            resetTimer();
+          }
+          if (e.key === "ArrowRight") {
+            goTo(current + 1);
+            resetTimer();
+          }
+        });
+
+        startTimer();
+      })();
     </script>
 
     <!-- Gallery Modal (Project Showcase) -->
@@ -8990,6 +10074,18 @@
           <div class="yt-grid" id="yt-grid"></div>
         </div>
       </div>
+    </div>
+
+    <!-- ═══════════════════════════════════
+         MOBILE NAV DROPDOWN OVERLAY
+    ═══════════════════════════════════ -->
+    <div class="mobile-nav-dropdown" id="mobile-nav-dropdown">
+      <button class="mob-nav-close" id="mob-nav-close">✕</button>
+      <button class="mob-nav-btn active" data-mob-page="about">Home</button>
+      <button class="mob-nav-btn" data-mob-page="resume">Resume</button>
+      <button class="mob-nav-btn" data-mob-page="projects">Projects</button>
+      <button class="mob-nav-btn" data-mob-page="blog">Catalog</button>
+      <button class="mob-nav-btn" data-mob-page="contact">Contact</button>
     </div>
   </body>
 </html>
