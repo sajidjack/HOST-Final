@@ -1489,36 +1489,57 @@ document.querySelectorAll("[data-page-link]").forEach(function (btn) {
 // ══════════════════════════════════════
 // BLOG EXPAND MODAL
 // ══════════════════════════════════════
-const blogExpandOverlay = document.getElementById("blog-expand-overlay");
-const blogExpandClose = document.getElementById("blog-expand-close");
+const blogExpandTriggers = document.querySelectorAll(".blog-expand-trigger");
+const blogExpandOverlays = document.querySelectorAll(".blog-expand-overlay");
+const blogExpandCloseButtons = document.querySelectorAll(".blog-expand-close");
 
 document.querySelectorAll(".blog-expand-trigger").forEach((btn) => {
   btn.addEventListener("click", (e) => {
     e.stopPropagation();
     const card = btn.closest(".blog-card");
-    document.getElementById("bex-img").src = card.dataset.bexImg || "";
-    document.getElementById("bex-cat").textContent = card.dataset.bexCat || "";
-    document.getElementById("bex-date").textContent =
+    const modalId = card.dataset.blogModal || "blog-expand-1";
+    const overlay = document.getElementById(modalId);
+    if (!overlay) return;
+
+    overlay.querySelector(".blog-expand-img img").src =
+      card.dataset.bexImg || "";
+    overlay.querySelector(".blog-cat").textContent = card.dataset.bexCat || "";
+    overlay.querySelector(".blog-date").textContent =
       card.dataset.bexDate || "";
-    document.getElementById("bex-title").textContent =
+    overlay.querySelector(".blog-expand-title").textContent =
       card.dataset.bexTitle || "";
-    document.getElementById("bex-text").textContent =
+    overlay.querySelector(".blog-expand-text").textContent =
       card.dataset.bexText || "";
-    blogExpandOverlay.classList.add("active");
+    overlay.classList.add("active");
     document.body.style.overflow = "hidden";
   });
 });
 
-function closeBlogExpand() {
-  blogExpandOverlay.classList.remove("active");
+function closeBlogExpand(overlay) {
+  if (!overlay) return;
+  overlay.classList.remove("active");
   document.body.style.overflow = "";
 }
-blogExpandClose.addEventListener("click", closeBlogExpand);
-blogExpandOverlay.addEventListener("click", (e) => {
-  if (e.target === blogExpandOverlay) closeBlogExpand();
+
+blogExpandCloseButtons.forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const overlay = btn.closest(".blog-expand-overlay");
+    closeBlogExpand(overlay);
+  });
 });
+
+blogExpandOverlays.forEach((overlay) => {
+  overlay.addEventListener("click", (e) => {
+    if (e.target === overlay) closeBlogExpand(overlay);
+  });
+});
+
 document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape") closeBlogExpand();
+  if (e.key === "Escape") {
+    document
+      .querySelectorAll(".blog-expand-overlay.active")
+      .forEach((overlay) => closeBlogExpand(overlay));
+  }
 });
 
 // ══════════════════════════════════════
@@ -1960,7 +1981,8 @@ function initializeContactTeam() {
       name: "Imtiyaz Ansari",
       role: "Stock Market Trainer |  M.Tech ",
       ring: "#ff2d72",
-      summary: "Experienced stock market trainer with a strong technical background.",
+      summary:
+        "Experienced stock market trainer with a strong technical background.",
       bio: "With over 8 years of experience in stock market training and a Master’s degree in Technology, Imtiyaz brings a unique blend of technical expertise and practical market knowledge. He has successfully trained hundreds of students, helping them develop effective trading strategies and achieve their financial goals.",
       img: "Asset/Portfolio IMG/Selfie/IMG_20260329_082235.jpg",
     },
@@ -1976,7 +1998,8 @@ function initializeContactTeam() {
       name: "Sohail Hindustan wala",
       role: "E&TC Engineer | Data Analyst",
       ring: "#bd2370",
-      summary: "Data analyst with a background in electronics and telecommunication engineering.",
+      summary:
+        "Data analyst with a background in electronics and telecommunication engineering.",
       bio: "Sohail has a degree in Electronics and Telecommunication Engineering and has transitioned into data analysis, where he applies his technical skills to extract insights from complex datasets. He has experience working with various data analysis tools and techniques, helping businesses make informed decisions based on data-driven insights.",
       img: "Asset/Portfolio IMG/Selfie/IMG_20260329_082257.jpg",
     },
@@ -1992,7 +2015,8 @@ function initializeContactTeam() {
       name: "Ashfaque Ahmed",
       role: "PhD Scholar | Software Developer",
       ring: "#ff4fd8",
-      summary: "Software developer with a strong academic background in research.",
+      summary:
+        "Software developer with a strong academic background in research.",
       bio: "Ashfaque is a PhD scholar with a focus on software development. He has a 250 + Clients locally who trust his expertise, published several Applications in the field of Textile sector & Educational Field. he has proficiency in multiple programming languages and software development methodologies, and he applies his research expertise to develop innovative software solutions.",
       img: "Asset/Portfolio IMG/Selfie/IMG_20260329_082326.jpg",
     },
@@ -2000,7 +2024,8 @@ function initializeContactTeam() {
       name: "Khadija Ansari",
       role: "UX/UI Designer",
       ring: "#20f6c9",
-      summary: "Remotely working UX/UI designer specializing in user-centered design.",
+      summary:
+        "Remotely working UX/UI designer specializing in user-centered design.",
       bio: "Khadija is a skilled UX/UI designer with experience working remotely for clients around the world. She specializes in creating user-centered designs that enhance the user experience and drive engagement. Khadija has a strong portfolio of design work, including websites, mobile apps, and other digital products, and she is proficient in design tools such as Adobe XD, Figma, and Canva.",
       img: "Asset/Portfolio IMG/Selfie/generated-image.png",
     },
